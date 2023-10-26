@@ -3,7 +3,7 @@ package postgresql
 import (
 	"context"
 
-	"github.com/Masterminds/squirrel"
+	sq "github.com/Masterminds/squirrel"
 	"github.com/jmoiron/sqlx"
 
 	"github.com/Shemistan/uzum_shop/internal/storage"
@@ -17,12 +17,16 @@ func NewRepoPostgres(db *sqlx.DB) storage.IStorage {
 	return &repo{db: db}
 }
 
-func (r *repo) getProductCount(ctx context.Context) (int64, error) {
+func (r *repo) getProductCount(ctx context.Context, id int64) (int64, error) {
 	var count int64
 
-	query := squirrel.Select("COUNT(*)").From("products")
+	query := sq.Select("count").
+		From("products").
+		Where(sq.Eq{"id": id}).
+		RunWith(r.db).
+		PlaceholderFormat(sq.Dollar)
 
-	err := query.RunWith(r.db).QueryRowContext(ctx).Scan(&count)
+	err := query.QueryRowContext(ctx).Scan(&count)
 	if err != nil {
 		return 0, err
 	}

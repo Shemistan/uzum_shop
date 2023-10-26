@@ -10,7 +10,7 @@ import (
 )
 
 func (r *repo) AddProduct(ctx context.Context, req *models.Basket) error {
-	count, countErr := r.getProductCount(ctx)
+	count, countErr := r.getProductCount(ctx, req.ProductID)
 	if countErr != nil {
 		return countErr
 	}
