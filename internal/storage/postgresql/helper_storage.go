@@ -3,6 +3,7 @@ package postgresql
 import (
 	"context"
 	"database/sql"
+	"errors"
 	sq "github.com/Masterminds/squirrel"
 	"github.com/Shemistan/uzum_shop/internal/models"
 )
@@ -71,6 +72,8 @@ func (s *storage) GetItemsFromBasket(ctx context.Context, userId int) ([]*models
 	}
 	defer rows.Close()
 
+	counter := 0
+
 	for rows.Next() {
 		var prodId, amount int
 
@@ -81,7 +84,11 @@ func (s *storage) GetItemsFromBasket(ctx context.Context, userId int) ([]*models
 			ProductId: prodId,
 			Count:     amount,
 		})
+		counter++
+	}
 
+	if counter == 0 {
+		return nil, errors.New("basket is empty")
 	}
 
 	return res, nil
