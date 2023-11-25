@@ -1,0 +1,160 @@
+syntax = "proto3";
+
+package shop_v1;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/wrappers.proto";
+import "google/api/annotations.proto";
+
+option go_package = "github.com/Shemistan/uzum_shop/pkg/shop_v1;shop_v1";
+
+service ShopV1{
+  rpc GetProduct(GetProduct.Request) returns (GetProduct.Response){
+    option (google.api.http) = {
+      get: "/shop/v1/product"
+    };
+  };
+  rpc GetProducts(google.protobuf.Empty) returns (GetProducts.Response){
+    option (google.api.http) = {
+      get: "/shop/v1/products"
+    };
+  };
+  rpc AddProduct(AddProduct.Request) returns (google.protobuf.Empty){
+    option (google.api.http) = {
+      post: "/shop/v1/basket"
+      body: "*"
+    };
+  };
+  rpc UpdateBasket(UpdateBasket.Request) returns (google.protobuf.Empty){
+    option (google.api.http) = {
+      put: "/shop/v1/basket"
+      body: "*"
+    };
+  };
+  rpc DeleteProduct(DeleteProduct.Request) returns (google.protobuf.Empty){
+    option (google.api.http) = {
+      delete: "/shop/v1/basket"
+    };
+  };
+  rpc GetBasket(google.protobuf.Empty) returns (GetBasket.Response){
+    option (google.api.http) = {
+      get: "/shop/v1/basket"
+    };
+  };
+  rpc CreateOrder(CreateOrder.Request) returns (CreateOrder.Response){
+    option (google.api.http) = {
+      post: "/shop/v1/order"
+      body: "*"
+    };
+  };
+  rpc CancelOrder(CancelOrder.Request) returns (google.protobuf.Empty){
+    option (google.api.http) = {
+      delete: "/shop/v1/order"
+    };
+  };
+
+  rpc Healthz(google.protobuf.Empty) returns (google.protobuf.Empty){
+    option (google.api.http) = {
+      get: "/shop/v1/healthz"
+    };
+  }
+}
+message CancelOrder {
+  message Request{
+    int64 order_id = 1;
+  }
+}
+
+message CreateOrder {
+  message Request{
+    Order order = 1;
+  }
+
+  message Response{
+    double cost = 1;
+    Order order = 2;
+  }
+}
+
+message GetBasket {
+  message Response{
+    repeated Basket basket = 1;
+  }
+}
+
+message DeleteProduct {
+  message Request{
+    int64 product_id = 1;
+  }
+}
+
+message UpdateBasket {
+  message Request{
+    UpBasket upBasket = 1;
+  }
+}
+
+message AddProduct {
+  message Request{
+    Basket basket = 1;
+  }
+}
+
+message GetProducts {
+  message Response{
+    repeated ShortProduct shortProduct = 1;
+  }
+}
+
+message GetProduct {
+  message Request{
+    int64 id = 1;
+  }
+
+  message Response{
+    Product product = 1;
+  }
+}
+
+message Product {
+  int64 id = 1;
+  string name = 2;
+  string description = 3;
+  double price = 4;
+  int32 count = 5;
+}
+
+message ShortProduct {
+  int64 id = 1;
+  string name = 2;
+  double price = 3;
+}
+
+message Basket {
+  int64 id = 1;
+  string user_id = 2;
+  int64 product_id = 3;
+  int32 count = 4;
+}
+
+message UpBasket {
+  int64 product_id = 1;
+  int32 count = 2;
+}
+
+message Order {
+  int64 id = 1;
+  string user_id = 2;
+  repeated uint64 product_id = 3;
+  string address = 4;
+  double coordinate_address_x = 5 [json_name = "coordinate_address_x"];
+  double coordinate_address_y = 6 [json_name = "coordinate_address_y"];
+  double coordinates_point_x = 7 [json_name = "coordinates_point_x"];
+  double coordinates_point_y = 8 [json_name = "coordinates_point_y"];
+  google.protobuf.Timestamp create_at = 9 [json_name = "create_at"];
+  google.protobuf.Timestamp start_at = 10 [json_name = "start_at"];
+  google.protobuf.Timestamp delivery_at = 11 [json_name = "delivery_at"];
+  int64 courier_id = 12 [json_name = "courier_id"];
+  string delivery_status = 13 [json_name = "delivery_status"];
+}
