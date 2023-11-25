@@ -8,11 +8,12 @@ import (
 	"github.com/Shemistan/uzum_shop/internal/models"
 )
 
-func (r *repo) GetBasket(ctx context.Context) ([]*models.Basket, error) {
+func (r *repo) GetBasket(ctx context.Context, userId string) ([]*models.Basket, error) {
 	var res []*models.Basket
 
 	builder := sq.Select("id", "user_id", "product_id", "count").
 		From("basket").
+		Where(sq.Eq{"user_id": userId}).
 		RunWith(r.db).
 		PlaceholderFormat(sq.Dollar)
 

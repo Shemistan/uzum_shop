@@ -20,6 +20,7 @@ import (
 	"github.com/Shemistan/uzum_shop/internal/models"
 	"github.com/Shemistan/uzum_shop/internal/service"
 	"github.com/Shemistan/uzum_shop/internal/storage/postgresql"
+	"github.com/Shemistan/uzum_shop/pkg/login_v1"
 	pb "github.com/Shemistan/uzum_shop/pkg/shop_v1"
 )
 
@@ -139,8 +140,15 @@ func (a *App) runHTTP() error {
 func (a *App) getService() service.IService {
 	storage := postgresql.NewRepoPostgres(a.db)
 
+	conn, err := grpc.Dial(a.appConfig.App.AuthClient, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	if err != nil {
+		log.Fatal("failed to connect: ", err.Error())
+	}
+
+	loginClient := login_v1.NewLoginV1Client(conn)
+
 	if a.shopService == nil {
-		a.shopService = service.NewService(a.appConfig, storage)
+		a.shopService = service.NewService(a.appConfig, storage, loginClient)
 	}
 
 	return a.shopService

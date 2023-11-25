@@ -12,5 +12,5 @@ type IStorage interface {
 	AddProduct(ctx context.Context, req *models.Basket) error
 	UpdateBasket(ctx context.Context, req *models.UpdateBasketRequest) error
 	DeleteProduct(ctx context.Context, id int64) error
-	GetBasket(ctx context.Context) ([]*models.Basket, error)
+	GetBasket(ctx context.Context, userId string) ([]*models.Basket, error)
 }
