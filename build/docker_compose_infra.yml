@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: uzum-postgres
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+      - PGUSER=postgres
+      - POSTGRES_DB=uzum
+    ports:
+      - ${DB_PORT:-5432}:5432
+    networks:
+      - uzum-api
+
+networks:
+  uzum-api:
+    external: true
