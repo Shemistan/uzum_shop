@@ -4,19 +4,19 @@ import (
 	"context"
 	"errors"
 	"github.com/Shemistan/uzum_shop/internal/models"
-	pb "github.com/Shemistan/uzum_shop/pkg/shopV1"
-	"time"
 )
 
-func (s *shopSystemService) CreateOrderService(ctx context.Context, req *pb.Order_Request) (*pb.Order_Response, error) {
+func (s *shopSystemService) CreateOrderService(ctx context.Context, req *models.Order) (int32, error) {
 	userId, err := s.GetUserIdFromLoginServ(ctx)
 	if err != nil {
-		return &pb.Order_Response{}, err
+		return 0, err
 	}
+
+	req.User_id = userId
 
 	getItemsFromBasket, err := s.storage.GetItemsFromBasket(ctx, userId)
 	if err != nil {
-		return &pb.Order_Response{}, err
+		return 0, err
 	}
 
 	stockMap := make(map[int]int)
@@ -24,11 +24,11 @@ func (s *shopSystemService) CreateOrderService(ctx context.Context, req *pb.Orde
 	for _, v := range getItemsFromBasket {
 		stockCounts, err := s.storage.GetProductCountStorage(ctx, uint32(v.ProductId))
 		if err != nil {
-			return nil, err
+			return 0, err
 		}
 
 		if stockCounts < v.Count {
-			return nil, errors.New("not enough stock")
+			return 0, errors.New("not enough stock")
 		}
 		stockMap[v.ProductId] = stockCounts
 	}
@@ -38,34 +38,22 @@ func (s *shopSystemService) CreateOrderService(ctx context.Context, req *pb.Orde
 	if req.Address == "" {
 		address, err = s.storage.GetAddress(ctx, userId)
 		if err != nil {
-			return nil, err
+			return 0, err
 		}
 
 		if address == "" {
-			return nil, errors.New("no address provided")
+			return 0, errors.New("no address provided")
 		}
 	}
 
-	orderModel := &models.Order{
-		User_id: userId,
-		//Products_id:          arr1,
-		Address:              address,
-		Coordinate_address_x: req.DropX,
-		Coordinate_address_y: req.DropY,
-		Coordinates_point_x:  req.TakeX,
-		Coordinates_point_y:  req.TakeY,
-		Create_at:            time.Now().Format("2006-01-02 15:04:05"),
-		Delivery_status:      "Awaiting Shipment",
-	}
-
-	respOrderId, err := s.storage.CreateOrderStorage(ctx, orderModel)
+	respOrderId, err := s.storage.CreateOrderStorage(ctx, req)
 	if err != nil {
-		return &pb.Order_Response{}, err
+		return 0, err
 	}
 
 	err = s.storage.CreateOrderDetails(ctx, int(respOrderId), getItemsFromBasket)
 	if err != nil {
-		return &pb.Order_Response{}, err
+		return 0, err
 	}
 
 	for _, item := range getItemsFromBasket {
@@ -77,11 +65,9 @@ func (s *shopSystemService) CreateOrderService(ctx context.Context, req *pb.Orde
 
 		err = s.storage.DeleteBasketStorage(ctx, deleteReq)
 		if err != nil {
-			return nil, err
+			return 0, err
 		}
 	}
 
-	return &pb.Order_Response{
-		OrderId: respOrderId,
-	}, nil
+	return int32(respOrderId), nil
 }

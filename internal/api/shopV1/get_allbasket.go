@@ -7,10 +7,26 @@ import (
 )
 
 func (serv *Shop) GetBasket(ctx context.Context, _ *empty.Empty) (*pb.GetBasket_Response, error) {
-	resp, err := serv.ShopService.GetBasketService(ctx)
+	response, err := serv.ShopService.GetBasketService(ctx)
 	if err != nil {
-		return &pb.GetBasket_Response{}, err
+		return nil, err
 	}
 
-	return resp, nil
+	var res []*pb.BasketItem
+
+	for _, v := range response {
+
+		res = append(res, &pb.BasketItem{
+			Id:        v.Id,
+			UserId:    v.UserId,
+			ProductId: v.ProductId,
+			Count:     v.Count,
+		})
+	}
+
+	respond := &pb.GetBasket_Response{
+		AllBasket: res,
+	}
+
+	return respond, nil
 }

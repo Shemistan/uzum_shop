@@ -10,6 +10,13 @@ type Product struct {
 	Count       uint32  `json:"count,omitempty"`
 }
 
+type BasketItem struct {
+	Id        uint32
+	UserId    uint32
+	ProductId uint32
+	Count     uint32
+}
+
 type AddProductToBasketModel struct {
 	UserId    int
 	ProductId uint32

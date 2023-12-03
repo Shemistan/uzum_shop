@@ -3,11 +3,11 @@ package postgresql
 import (
 	"context"
 	sq "github.com/Masterminds/squirrel"
-	pb "github.com/Shemistan/uzum_shop/pkg/shopV1"
+	"github.com/Shemistan/uzum_shop/internal/models"
 )
 
-func (s *storage) GetBasketStorage(ctx context.Context, userId int) (*pb.GetBasket_Response, error) {
-	var res []*pb.BasketItem
+func (s *storage) GetBasketStorage(ctx context.Context, userId int) ([]*models.BasketItem, error) {
+	var basket []*models.BasketItem
 
 	builder := sq.Select("id", "user_id", "product_id", "amount").
 		From("basket").
@@ -30,16 +30,13 @@ func (s *storage) GetBasketStorage(ctx context.Context, userId int) (*pb.GetBask
 			return nil, err
 		}
 
-		res = append(res, &pb.BasketItem{
+		basket = append(basket, &models.BasketItem{
 			Id:        id,
 			UserId:    user_id,
 			ProductId: product_id,
 			Count:     count,
 		})
 	}
-	respond := &pb.GetBasket_Response{
-		AllBasket: res,
-	}
 
-	return respond, nil
+	return basket, nil
 }

@@ -7,10 +7,20 @@ import (
 )
 
 func (serv *Shop) GetAllProduct(ctx context.Context, _ *emptypb.Empty) (*pb.GetAllProducts_Response, error) {
-	resp, err := serv.ShopService.GetAllProductsService(ctx)
+	response, err := serv.ShopService.GetAllProductsService(ctx)
 	if err != nil {
 		return &pb.GetAllProducts_Response{}, err
 	}
 
-	return resp, nil
+	var all []*pb.ProductShort
+	for _, p := range response {
+		all = append(all, &pb.ProductShort{
+			Name:  p.Name,
+			Price: p.Price,
+		})
+	}
+
+	return &pb.GetAllProducts_Response{
+		AllProducts: all,
+	}, nil
 }

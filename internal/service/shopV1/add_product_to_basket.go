@@ -4,10 +4,9 @@ import (
 	"context"
 	"fmt"
 	"github.com/Shemistan/uzum_shop/internal/models"
-	pb "github.com/Shemistan/uzum_shop/pkg/shopV1"
 )
 
-func (s *shopSystemService) AddProductToBasketService(ctx context.Context, req *pb.AddProductToBasket_Request) error {
+func (s *shopSystemService) AddProductToBasketService(ctx context.Context, req *models.AddProductToBasketModel) error {
 	userId, err := s.GetUserIdFromLoginServ(ctx)
 	if err != nil {
 		return err
@@ -22,13 +21,9 @@ func (s *shopSystemService) AddProductToBasketService(ctx context.Context, req *
 		return fmt.Errorf("sorry, not enough inventory. Only %v left in stock", count)
 	}
 
-	addProdToBask := &models.AddProductToBasketModel{
-		UserId:    userId,
-		ProductId: req.ProductId,
-		Count:     req.Count,
-	}
+	req.UserId = userId
 
-	err = s.storage.AddProductToBasketStorage(ctx, addProdToBask)
+	err = s.storage.AddProductToBasketStorage(ctx, req)
 	if err != nil {
 		return err
 	}

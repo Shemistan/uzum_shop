@@ -73,7 +73,6 @@ func (s *storage) GetItemsFromBasket(ctx context.Context, userId int) ([]*models
 	defer rows.Close()
 
 	counter := 0
-
 	for rows.Next() {
 		var prodId, amount int
 
@@ -95,14 +94,12 @@ func (s *storage) GetItemsFromBasket(ctx context.Context, userId int) ([]*models
 }
 
 func (s *storage) CreateOrderDetails(ctx context.Context, order_id int, items []*models.GetFromBasket) error {
-
 	q := sq.Insert("orders_details").
 		Columns("order_id", "product_id", "quantity").
 		RunWith(s.db).PlaceholderFormat(sq.Dollar)
 
 	for _, item := range items {
 		q = q.Values(order_id, item.ProductId, item.Count)
-
 	}
 
 	_, err := q.ExecContext(ctx)

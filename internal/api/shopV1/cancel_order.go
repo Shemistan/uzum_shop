@@ -7,7 +7,7 @@ import (
 )
 
 func (serv *Shop) CancelOrder(ctx context.Context, req *pb.CancelOrder_Request) (*empty.Empty, error) {
-	_, err := serv.ShopService.CancelOrderService(ctx, req)
+	err := serv.ShopService.CancelOrderService(ctx, req.OrderId)
 	if err != nil {
 		return &empty.Empty{}, err
 	}
