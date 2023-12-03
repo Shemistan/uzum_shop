@@ -1,0 +1,108 @@
+syntax="proto3";
+
+option go_package="github.com/Shemistan/uzum_auth/generated/shop_v1;shop_v1";
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+
+service shop_service {
+  rpc get_product (ProductGet.Request) returns (ProductGet.Response) {
+    option (google.api.http) = {
+      get: "/shop/v1/product/get/{product_id}"
+    };
+  }
+  rpc get_products (google.protobuf.Empty) returns (ProductsGet.Response) {
+    option (google.api.http) = {
+      get: "/shop/v1/products"
+    };
+  }
+  rpc add_product_to_cart(Cart.UpdateRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/shop/v1/basket/add"
+      body: "*"
+    };
+  }
+  rpc update_cart (Cart.UpdateRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/shop/v1/basket/update"
+      body: "*"
+    };
+  }
+  rpc get_cart (google.protobuf.Empty) returns (Cart.GetResponse) {
+    option (google.api.http) = {
+      get: "/shop/v1/basket/get"
+    };
+  }
+  rpc delete_cart (Cart.DeleteRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/shop/v1/basket/delete/{product_id}"
+    };
+  }
+  rpc create_order (Order.CreateRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/shop/v1/order/create"
+      body: "*"
+    };
+  }
+  rpc cancel_order (Order.CancelRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/shop/v1/order/cancel/{order_id}"
+    };
+  }
+}
+
+message ProductGet {
+  message Request {
+    string product_id = 1;
+  }
+  message Response {
+    Product product = 1;
+  }
+}
+
+message ProductsGet {
+  message Response {
+    repeated ShortProductInfo products = 1;
+  }
+}
+
+message Cart {
+  message UpdateRequest {
+    string product_id = 1;
+    uint32 quantity = 2;
+  }
+  message GetResponse {
+    repeated Product products = 1;
+  }
+  message DeleteRequest {
+    string product_id = 1;
+  }
+}
+
+message Order {
+  message CancelRequest {
+    string order_id = 1;
+  }
+
+  message CreateRequest {
+    float latitude = 1;
+    float longitude = 2;
+    string metadata = 3;
+  }
+}
+
+
+message Product {
+  string product_id = 1;
+  string name = 2;
+  string description = 3;
+  float price = 4;
+  uint32 quantity = 5;
+}
+
+message ShortProductInfo{
+  string product_id = 1;
+  string name = 2;
+  float price = 3;
+}
+
