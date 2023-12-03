@@ -1,6 +1,6 @@
 syntax="proto3";
 
-option go_package="github.com/Shemistan/uzum_auth/pkg/shop_v1;shop_v1";
+option go_package="github.com/Shemistan/uzum_auth/generated/shop_v1;shop_v1";
 
 import "google/api/annotations.proto";
 import "google/protobuf/empty.proto";
@@ -41,6 +41,7 @@ service shop_service {
   rpc create_order (Order.CreateRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
       post: "/shop/v1/order/create"
+      body: "*"
     };
   }
   rpc cancel_order (Order.CancelRequest) returns (google.protobuf.Empty) {

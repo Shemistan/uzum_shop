@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "internal/protos/shop.proto",
+    "title": "protos/shop_v1/shop.proto",
     "version": "version not set"
   },
   "tags": [
@@ -186,24 +186,12 @@
         },
         "parameters": [
           {
-            "name": "latitude",
-            "in": "query",
-            "required": false,
-            "type": "number",
-            "format": "float"
-          },
-          {
-            "name": "longitude",
-            "in": "query",
-            "required": false,
-            "type": "number",
-            "format": "float"
-          },
-          {
-            "name": "metadata",
-            "in": "query",
-            "required": false,
-            "type": "string"
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/OrderCreateRequest"
+            }
           }
         ],
         "tags": [
@@ -286,6 +274,22 @@
         "quantity": {
           "type": "integer",
           "format": "int64"
+        }
+      }
+    },
+    "OrderCreateRequest": {
+      "type": "object",
+      "properties": {
+        "latitude": {
+          "type": "number",
+          "format": "float"
+        },
+        "longitude": {
+          "type": "number",
+          "format": "float"
+        },
+        "metadata": {
+          "type": "string"
         }
       }
     },

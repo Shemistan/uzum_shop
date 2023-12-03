@@ -4,15 +4,15 @@ import (
 	"context"
 	"database/sql"
 	"github.com/google/uuid"
+	"uzum_shop/generated/protos/login_v1"
 	"uzum_shop/internal/db"
 	"uzum_shop/internal/models"
-	"uzum_shop/pkg/loginV1"
 )
 
 type (
 	ShopService struct {
 		storage     storage
-		loginClient loginV1.LoginV1Client
+		loginClient login_v1.LoginV1Client
 		cart        map[uuid.UUID]*models.Cart
 	}
 	storage interface {
@@ -28,7 +28,7 @@ type (
 	}
 )
 
-func NewShopService(storage storage, loginClient loginV1.LoginV1Client) *ShopService {
+func NewShopService(storage storage, loginClient login_v1.LoginV1Client) *ShopService {
 	return &ShopService{storage: storage,
 		cart:        make(map[uuid.UUID]*models.Cart),
 		loginClient: loginClient}

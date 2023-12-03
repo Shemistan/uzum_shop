@@ -13,7 +13,7 @@ func (s *ShopService) AddProductToCart(ctx context.Context, productID uuid.UUID,
 	}
 
 	if s.cart[userID] == nil {
-		s.cart[userID] = &models.Cart{}
+		s.cart[userID] = models.NewCart()
 	}
 
 	productPrice, err := s.storage.GetProductPrice(ctx, productID)

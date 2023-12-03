@@ -3,16 +3,16 @@ package api
 import (
 	"context"
 	"github.com/google/uuid"
-	"uzum_shop/pkg/shopV1"
+	"uzum_shop/generated/protos/shop_v1"
 )
 
-func (s *ShopAPI) GetProduct(ctx context.Context, req *shopV1.ProductGet_Request) (*shopV1.ProductGet_Response, error) {
+func (s *ShopAPI) GetProduct(ctx context.Context, req *shop_v1.ProductGet_Request) (*shop_v1.ProductGet_Response, error) {
 	product, err := s.service.GetProduct(ctx, uuid.MustParse(req.ProductId))
 	if err != nil {
-		return &shopV1.ProductGet_Response{}, err
+		return &shop_v1.ProductGet_Response{}, err
 	}
-	response := &shopV1.ProductGet_Response{
-		Product: &shopV1.Product{ProductId: product.ID.String(),
+	response := &shop_v1.ProductGet_Response{
+		Product: &shop_v1.Product{ProductId: product.ID.String(),
 			Name:        product.Name,
 			Price:       float32(product.Price),
 			Description: product.Description,

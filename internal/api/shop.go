@@ -1,12 +1,12 @@
 package api
 
 import (
+	"uzum_shop/generated/protos/shop_v1"
 	"uzum_shop/internal/services"
-	"uzum_shop/pkg/shopV1"
 )
 
 type ShopAPI struct {
-	shopV1.UnimplementedShopServiceServer
+	shop_v1.UnimplementedShopServiceServer
 	service *services.ShopService
 }
 

@@ -22,5 +22,6 @@ go.work
 
 # Go files
 .idea
-
-pkg/*
+/generated/
+/build/
+/internal/db/

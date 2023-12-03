@@ -7,18 +7,18 @@ gen_proto:gen_login gen_shop
 
 gen_shop:
 		@mkdir -p ./docs
-		@mkdir -p pkg/shopV1
-		@protoc	--go_out=pkg/shopV1 --go_opt=paths=source_relative \
-				--go-grpc_out=pkg/shopV1 --go-grpc_opt=paths=source_relative \
-				--grpc-gateway_out=pkg/shopV1 --grpc-gateway_opt=paths=source_relative \
+		@mkdir -p generated/
+		@protoc	--go_out=generated --go_opt=paths=source_relative \
+				--go-grpc_out=generated --go-grpc_opt=paths=source_relative \
+				--grpc-gateway_out=generated --grpc-gateway_opt=paths=source_relative \
 				--openapiv2_out=allow_merge=true,merge_file_name=api_shopV1:docs \
-				internal/protos/shop.proto
+				protos/shop_v1/shop.proto
 
 gen_login:
-		@mkdir -p pkg/loginV1
-		@protoc 	--go_out=pkg/loginV1 --go_opt=paths=source_relative \
-				--go-grpc_out=pkg/loginV1 --go-grpc_opt=paths=source_relative \
-				internal/protos/login.proto
+		@mkdir -p generated/
+		@protoc --go_out=generated --go_opt=paths=source_relative \
+				--go-grpc_out=generated --go-grpc_opt=paths=source_relative \
+				protos/login_v1/login.proto
 
 docker_create_network:
 	@docker network create uzum-api || true

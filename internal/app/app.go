@@ -5,16 +5,16 @@ import (
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/jmoiron/sqlx"
 	"google.golang.org/grpc"
+	"uzum_shop/generated/protos/login_v1"
 	"uzum_shop/internal/api"
 	"uzum_shop/internal/models"
-	"uzum_shop/pkg/loginV1"
 )
 
 type App struct {
 	dbConn *sqlx.DB
 
 	shopAPI     api.ShopAPI
-	loginClient loginV1.LoginV1Client
+	loginClient login_v1.LoginV1Client
 	grpcServer  *grpc.Server
 	httpMux     *runtime.ServeMux
 
