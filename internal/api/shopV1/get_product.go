@@ -6,7 +6,8 @@ import (
 )
 
 func (serv *Shop) GetProduct(ctx context.Context, req *pb.GetProduct_Request) (*pb.GetProduct_Response, error) {
-	response, err := serv.ShopService.GetProductService(ctx, req)
+	var prodId = req.ProductId
+	response, err := serv.ShopService.GetProductService(ctx, prodId)
 	if err != nil {
 		return &pb.GetProduct_Response{}, err
 	}
@@ -20,6 +21,5 @@ func (serv *Shop) GetProduct(ctx context.Context, req *pb.GetProduct_Request) (*
 			Count:       response.Count,
 		},
 	}, nil
-
 
 }

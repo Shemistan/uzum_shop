@@ -33,7 +33,7 @@ func (s *shopSystemService) CreateOrderService(ctx context.Context, req *models.
 		stockMap[v.ProductId] = stockCounts
 	}
 
-	var address string = req.Address
+	var address string
 
 	if req.Address == "" {
 		address, err = s.storage.GetAddress(ctx, userId)
@@ -44,6 +44,7 @@ func (s *shopSystemService) CreateOrderService(ctx context.Context, req *models.
 		if address == "" {
 			return 0, errors.New("no address provided")
 		}
+		req.Address = address
 	}
 
 	respOrderId, err := s.storage.CreateOrderStorage(ctx, req)

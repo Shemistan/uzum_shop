@@ -5,12 +5,11 @@ import (
 	"github.com/Shemistan/uzum_shop/internal/models"
 	repo "github.com/Shemistan/uzum_shop/internal/storage"
 	loginPb "github.com/Shemistan/uzum_shop/pkg/loginV1"
-	pb "github.com/Shemistan/uzum_shop/pkg/shopV1"
 )
 
 type IShopSystemService interface {
 	GetUserIdFromLoginServ(ctx context.Context) (int, error)
-	GetProductService(ctx context.Context, request *pb.GetProduct_Request) (*models.Product, error)
+	GetProductService(ctx context.Context, prodId uint32) (*models.Product, error)
 	GetAllProductsService(ctx context.Context) ([]*models.Product, error)
 	AddProductToBasketService(ctx context.Context, req *models.AddProductToBasketModel) error
 	UpdateBasketService(ctx context.Context, req *models.AddProductToBasketModel) error
